@@ -14,32 +14,38 @@ const CourseLoader = ({
   const [countdown, setCountdown] = useState(5);
   const router = useRouter();
 
+  // Effect 1: Disable scroll on mount
   useEffect(() => {
-    // Disable scroll
     document.body.style.overflow = "hidden";
-
-    let interval: NodeJS.Timeout;
-    let timeout: NodeJS.Timeout;
-
-    if (courseId) {
-      interval = setInterval(() => {
-        if (countdown > 0) {
-          setCountdown((prev) => prev - 1);
-        } else {
-          setCountdown(0);
-        }
-      }, 1000);
-
-      timeout = setTimeout(() => {
-        router.push(`/courses/${courseId}`);
-      }, 5000);
-    }
-
     return () => {
-      clearInterval(interval);
-      clearTimeout(timeout);
       document.body.style.overflow = "";
     };
+  }, []);
+
+  // Effect 2: Countdown timer
+  useEffect(() => {
+    if (!courseId) return;
+
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev > 0) return prev - 1;
+        clearInterval(interval);
+        return 0;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [courseId]);
+
+  // Effect 3: Redirect after 5 seconds
+  useEffect(() => {
+    if (!courseId) return;
+
+    const timeout = setTimeout(() => {
+      router.push(`/courses/${courseId}`);
+    }, 5000);
+
+    return () => clearTimeout(timeout);
   }, [courseId, router]);
 
   return (

@@ -17,26 +17,32 @@ export function PointerHighlight({
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+useEffect(() => {
+  const current = containerRef.current; // ✅ store current ref
 
-    const { width, height } = container.getBoundingClientRect();
+  if (current) {
+    const { width, height } = current.getBoundingClientRect();
     setDimensions({ width, height });
+  }
 
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { width, height } = entry.contentRect;
-        setDimensions({ width, height });
-      }
-    });
+  const resizeObserver = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const { width, height } = entry.contentRect;
+      setDimensions({ width, height });
+    }
+  });
 
-    resizeObserver.observe(container);
+  if (current) {
+    resizeObserver.observe(current);
+  }
 
-    return () => {
-      resizeObserver.unobserve(container);
-    };
-  }, []);
+  return () => {
+    if (current) {
+      resizeObserver.unobserve(current);
+    }
+  };
+}, []);
+
 
   return (
     <div

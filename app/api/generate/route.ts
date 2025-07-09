@@ -2,13 +2,8 @@ import { NextResponse, NextRequest } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { fetchYoutubeVideo } from "@/lib/youtube";
 
-// ✅ Ensure GEMINI_API_KEY is defined
-const apiKey = process.env.GEMINI_API_KEY;
-if (!apiKey) {
-  throw new Error("GEMINI_API_KEY is not defined in environment variables");
-}
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
-const genAI = new GoogleGenerativeAI(apiKey);
 
 export async function POST(req: NextRequest) {
   const { topic } = await req.json();
@@ -21,8 +16,8 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
-
   const prompt = `
+
   Respond ONLY with a **JSON array in camelCase** like:
   [
     {
@@ -50,6 +45,7 @@ export async function POST(req: NextRequest) {
   3. Give channel who specialize in the niche priority over general content creators.
   4. If there are university courses for core engineering subjects, for example: MIT Opencourseware, Stanford, Oxford for the niches, give those videos priority. 
   5. Prioritize videos that are teaching content over roadmap videos.
+  
   `;
 
   const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
@@ -73,9 +69,10 @@ export async function POST(req: NextRequest) {
     });
 
     const responseText = await result.response.text();
+
     let cleanedResponse = responseText.trim();
 
-    // Remove markdown code blocks if present
+    // Remove markdown blocks
     if (cleanedResponse.startsWith("```json")) {
       cleanedResponse = cleanedResponse
         .replace(/```json\n?/, "")
@@ -88,7 +85,7 @@ export async function POST(req: NextRequest) {
 
     const parsed = JSON.parse(cleanedResponse);
 
-    // Transform and enrich each lesson with Youtube URL
+    // Don't assume it matches camelCase. Transform it manually:
     const enrichedLessons: Lesson[] = await Promise.all(
       parsed.map(async (lesson: Lesson) => {
         const url = await fetchYoutubeVideo(lesson.youtubeQuery);

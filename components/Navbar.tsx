@@ -2,7 +2,7 @@
 import { navItems } from "@/constants/constant";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, X, LogOut, Plus } from "lucide-react";
+import { Menu, X, LogOut, Plus ,Layers} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 type User = {
@@ -46,9 +46,12 @@ const Navbar = () => {
     <article className="fixed inset-x-0 top-0 h-25 text-white font-main z-50">
       <div className="absolute inset-0 bg-transparent grid grid-cols-3 items-center backdrop-blur-sm place-items-center">
         {/* Logo */}
-        <h1 className="font-semibold">
-          <Link href={"/"}>Sublime IQ</Link>
+          <Link href={"/"}> 
+        <h1 className="font-semibold flex gap-2 items-center">
+          <span><Layers /></span> Sublime IQ
         </h1>
+          </Link>
+     
         {/* Desktop Nav */}
         <div className="hidden md:flex ">
           <ul className="flex gap-6 items-center">

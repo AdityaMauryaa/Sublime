@@ -5,7 +5,6 @@ import { fetchYoutubeVideo } from "@/lib/youtube";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 export async function POST(req: NextRequest) {
   const { topic } = await req.json();
-
   if (!topic || !topic.trim()) {
     return NextResponse.json(
       {

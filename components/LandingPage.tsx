@@ -54,8 +54,10 @@ const LandingPage = () => {
       <div
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `radial-gradient(circle 500px at 50% 100px, rgba(139,92,246,0.4), transparent)`,
-        }}
+  backgroundImage: `radial-gradient(ellipse 500px 200px at 50% 10%, rgba(13,192,246,0.3), transparent),
+                    radial-gradient(ellipse 500px 200px at 50% 90%, rgba(13,192,246,0.3), transparent)`
+}}
+
       />
       <motion.div
         className="z-1 flex items-center justify-center flex-col gap-8 px-7"
@@ -67,12 +69,15 @@ const LandingPage = () => {
           className="text-white text-3xl md:text-5xl flex gap-2 flex-wrap justify-center"
           variants={childVariant}
         >
-          Your Intelligence,
+          Empowering Your 
+
+
+
           <PointerHighlight
-            rectangleClassName="bg-[#342569] dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 leading-loose"
+            rectangleClassName="bg-[rgb(13,192,246,0.3)] dark:bg-neutral 700 border-neutral-300 dark:border-neutral-600 leading-loose"
             pointerClassName="text-[#37276D] h-3 w-3"
           >
-            <span className="relative z-10">Augmented</span>
+            <span className="relative z-10">Intelligence</span>
           </PointerHighlight>
         </motion.h1>
 
@@ -80,7 +85,7 @@ const LandingPage = () => {
           className="text-neutral-300 text-center text-sm"
           variants={childVariant}
         >
-          Skip the Information Overload - Get Focused Learning Modules
+          Skip the Information Overload - Learn Precisely. Advance Confidently.
         </motion.p>
 
         <motion.div variants={childVariant} className="flex gap-5">
